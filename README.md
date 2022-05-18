@@ -205,7 +205,67 @@ while True :
 
 window.read()
 window.close()
+###############################################################################(MAIN)
+import PySimpleGUI as sg
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
 
+sg.theme('DarkAmber')
+def scrap_from_emalls_page (values, window):
+    print(event)
+    print(values)
+    mydivs = str()
+    print(values)
+    model_to_brand_number = dict()
+
+    page_number = 1
+
+    url = "https://emalls.ir/%D9%85%D8%AD%D8%B5%D9%88%D9%84%D8%A7%D8%AA~Category~39"
+    page = urlopen(url)
+    html = page.read().decode("utf-8")
+    soup = BeautifulSoup(html, "html.parser")
+    print(soup.get_text())
+
+    # todo: change html parser
+    myprice = soup.find_all("span", {"class": "item-price"})
+    price_list = list()
+    for span in myprice:
+        try:
+            price_list.append(span.contents[0])
+        except:
+            True
+
+        #window["url"].update(value=url)
+        print([str(values)])
+    for price in price_list:
+        window["output"].print([str(price)])
+
+layout = [[sg.Text('Enter the url.'),sg.Text('                                                            company')],
+            [sg.Input(),sg.Input()],
+            [sg.Button("Submit"),
+            sg.Button("Exit")],
+            [sg.Button("Help")],
+              [sg.Multiline(key="output",expand_x=True, expand_y=True, k='-MLINE-', disabled=True)]]
+
+window = sg.Window("Web Scrapping", layout)
+
+page_number = 1
+
+# window information
+#############################################################
+while True:
+    event,values = window.read()
+
+    if event == "Help":
+        sg.Popup('try again')
+
+    if event == "Exit":
+        break
+
+    if event == "Submit":
+        scrap_from_emalls_page(values, window)
+window.read()
+window.close()
 
 
 
